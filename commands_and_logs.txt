@@ -63,5 +63,5 @@ kubectl get all,ing -l homework=frontapp
 kubectl delete all,ing -l training=block3
 
 
-# restarting, if necessary:
+# setting up the workload from scratch with one command, if necessary:
 kubectl apply -f .\deployment-backend.yaml -f .\deployment-frontend.yaml -f .\service-backend.yaml -f .\service-frontend.yaml -f .\ingress-frontend.yaml
