@@ -1,0 +1,67 @@
+# running the commands from the cubix-cloudnative-block3-homework directory
+
+
+# BACKEND
+
+# creating deployment-backend.yaml
+kubectl apply -f .\deployment-backend.yaml
+	# testing with Postman
+		# kubectl get pods
+			# Name of the pod: backapp-deploy-b6c946688-gvvr6
+		# kubectl port-forward pod/backapp-deploy-b6c946688-gvvr6 8081:8080
+			# sending request with Postman (http://localhost:8081/backapp) --> ... "message": "backapp" ...
+			# test successful, ^C
+
+# creating service-backend.yaml
+kubectl apply -f .\service-backend.yaml
+	# testing with Postman
+		# kubectl port-forward svc/backapp-svc 8081:8080
+			# sending request with Postman (http://localhost:8081/backapp) --> ... "message": "backapp" ...
+			# test successful, ^C
+
+
+
+# FRONTEND
+
+# creating deployment-frontend.yaml
+kubectl apply -f .\deployment-frontend.yaml
+	# testing with Postman
+		# kubectl get pods
+			# Name of the pod: frontapp-deploy-65c49f8cb-wlc64
+		# kubectl port-forward pod/frontapp-deploy-65c49f8cb-wlc64 8082:8080
+			# sending request with Postman
+				# http://localhost:8082/frontapp/local?message=Hello    --> ...  "backappMessage": "frontapp:Hello" ...
+				# http://localhost:8082/frontapp?message=Hello          --> ...  "backappMessage": "Hello" ...
+			# test successful, ^C
+
+# creating service-frontend.yaml
+kubectl apply -f .\service-frontend.yaml
+	# testing with Postman
+		# kubectl port-forward svc/frontapp-svc 8082:8080
+			# sending request with Postman
+				# http://localhost:8082/frontapp/local?message=Hello    --> ...  "backappMessage": "frontapp:Hello" ...
+				# http://localhost:8082/frontapp?message=Hello          --> ...  "backappMessage": "Hello" ...
+			# test successful, ^C
+
+# creating ingress-frontend.yaml
+kubectl apply -f .\ingress-frontend.yaml
+	# testing with Postman
+		# sending request with Postman
+			# http://localhost:8080/frontapp/local?message=Hello    --> ...  "backappMessage": "frontapp:Hello" ...
+			# http://localhost:8080/frontapp?message=Hello          --> ...  "backappMessage": "Hello" ...
+		# test successful
+
+
+
+# checking the logs of the backend (I checked the name of the pod above):
+kubectl logs backapp-deploy-b6c946688-gvvr6
+
+# listing all resources related to the frontapp:
+kubectl get all,ing -l homework=frontapp
+
+# deleting all resources:
+kubectl delete all,ing -l training=block3
+
+
+# restarting, if necessary:
+kubectl apply -f .\deployment-backend.yaml -f .\deployment-frontend.yaml -f .\service-backend.yaml -f .\service-frontend.yaml -f .\ingress-frontend.yaml
